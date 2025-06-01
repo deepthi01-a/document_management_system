@@ -1,7 +1,12 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const client = require('prom-client');
-const collectDefaultMetrics = client.collectDefaultMetrics;
+
+// Create a Registry and collect default metrics
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
 const { router: authRouter } = require('./routes/auth');
 const documentsRouter = require('./routes/documents');
 
@@ -10,33 +15,43 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 
 // Prometheus metrics endpoint
-collectDefaultMetrics();
 app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', client.register.contentType);
-  res.end(await client.register.metrics());
+  res.set('Content-Type', register.contentType);
+  const metrics = await register.metrics();
+  res.end(metrics);
 });
 
-// Auth routes
+// API routes
 app.use('/api/auth', authRouter);
-
-// Document routes (GET, POST, PUT, DELETE, SEARCH)
 app.use('/api/documents', documentsRouter);
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy' });
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// Welcome route
-app.get('/', (req, res) => {
-  res.send('Welcome to the Legal Document Management System API!');
+// Serve static files from React build (production)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../public')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('Welcome to Legal Document Management System API! Frontend runs on port 3001 in development.');
+  });
+}
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: 'Something went wrong!' });
 });
 
-// Start server (only if not in test)
+// Start server
 if (process.env.NODE_ENV !== 'test') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
