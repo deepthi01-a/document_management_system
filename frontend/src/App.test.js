@@ -3,28 +3,26 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import App from './App';
 
-test('renders Legal Document Management System', () => {
+test('renders landing page by default', () => {
   render(<App />);
   const titleElement = screen.getByText(/Legal Document Management System/i);
   expect(titleElement).toBeInTheDocument();
 });
 
-test('renders upload form button', () => {
+test('renders get started button on landing page', () => {
   render(<App />);
-  const uploadButton = screen.getByRole('button', { name: /upload/i });
-  expect(uploadButton).toBeInTheDocument();
+  const getStartedButton = screen.getByText(/Get Started/i);
+  expect(getStartedButton).toBeInTheDocument();
 });
 
-test('renders API health status section', () => {
+test('renders features section', () => {
   render(<App />);
-  const healthSection = screen.getByText(/API Health Status/i);
-  expect(healthSection).toBeInTheDocument();
+  const featuresSection = screen.getByText(/Powerful Features/i);
+  expect(featuresSection).toBeInTheDocument();
 });
 
-test('renders upload form inputs', () => {
+test('renders tech stack section', () => {
   render(<App />);
-  const titleInput = screen.getByPlaceholderText(/title/i);
-  const contentInput = screen.getByPlaceholderText(/content/i);
-  expect(titleInput).toBeInTheDocument();
-  expect(contentInput).toBeInTheDocument();
+  const techSection = screen.getByText(/Built with Modern Technologies/i);
+  expect(techSection).toBeInTheDocument();
 });
