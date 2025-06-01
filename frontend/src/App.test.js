@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import App from './App';
 
-test('renders landing page title', () => {
+test('renders landing page main heading', () => {
   render(<App />);
-  const titleElement = screen.getByText(/Legal Document Management System/i);
+  const titleElement = screen.getByRole('heading', { level: 1, name: /Legal Document Management System/i });
   expect(titleElement).toBeInTheDocument();
 });
 
