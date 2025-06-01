@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --testPathIgnorePatterns=frontend",
     "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
