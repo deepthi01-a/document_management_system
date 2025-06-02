@@ -1,7 +1,9 @@
+require('dotenv').config(); // Add this as the FIRST line
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const client = require('prom-client');
+const connectDB = require('./config/db');
 const { iam } = require('./middleware/auth');
 
 // Create a Registry and collect default metrics
@@ -12,6 +14,8 @@ const { router: authRouter } = require('./routes/auth');
 const documentsRouter = require('./routes/documents');
 
 const app = express();
+
+connectDB();  // Connect to MongoDB
 
 // Middleware
 app.use(cors());
