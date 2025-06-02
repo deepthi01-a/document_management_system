@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const client = require('prom-client');
+const { iam } = require('./middleware/auth');
 
 // Create a Registry and collect default metrics
 const register = new client.Registry();
@@ -15,6 +16,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Initialize Vault secrets on startup
+iam.initializeSecrets();  // ← ADD THIS LINE HERE
 
 // Prometheus metrics endpoint
 app.get('/metrics', async (req, res) => {
