@@ -9,7 +9,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --testPathIgnorePatterns=frontend",
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "lint": "echo 'No linting configured'"
   },
   "keywords": [],
   "author": "",
