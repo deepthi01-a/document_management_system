@@ -2,7 +2,7 @@
   "name": "legal-docs-project",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "index.js",
   "directories": {
     "test": "tests"
   },
