@@ -52,6 +52,7 @@ function Dashboard({ user, onLogout }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Submitting:', form); // <-- Add this line
     try {
       const response = await fetch(`${API_BASE}/api/documents`, {
         method: 'POST',
@@ -70,7 +71,7 @@ function Dashboard({ user, onLogout }) {
   };
 
   const handleEdit = (doc) => {
-    setEditingId(doc.id);
+    setEditingId(doc._id);
     setEditForm({ title: doc.title, content: doc.content, category: doc.category });
   };
 
@@ -175,12 +176,19 @@ function Dashboard({ user, onLogout }) {
               onChange={(e) => setForm({...form, title: e.target.value})}
               required
             />
-            <input
-              type="text"
-              placeholder="Category"
+            <select
               value={form.category}
-              onChange={(e) => setForm({...form, category: e.target.value})}
-            />
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="contract">Contract</option>
+              <option value="legal-brief">Legal Brief</option>
+              <option value="court-filing">Court Filing</option>
+              <option value="correspondence">Correspondence</option>
+              <option value="research">Research</option>
+              <option value="general">General</option>
+            </select>
             <textarea
               placeholder="Document Content"
               value={form.content}
@@ -202,18 +210,27 @@ function Dashboard({ user, onLogout }) {
         ) : (
           <div className="documents-grid">
             {documents.map(doc => (
-              <div key={doc.id} className="document-card">
-                {editingId === doc.id ? (
+              <div key={doc._id} className="document-card">
+                {editingId === doc._id ? (
                   <form onSubmit={handleUpdate} className="edit-form">
                     <input
                       value={editForm.title}
                       onChange={(e) => setEditForm({...editForm, title: e.target.value})}
                       required
                     />
-                    <input
+                    <select
                       value={editForm.category}
-                      onChange={(e) => setEditForm({...editForm, category: e.target.value})}
-                    />
+                      onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                      required
+                    >
+                      <option value="">Select Category</option>
+                      <option value="contract">Contract</option>
+                      <option value="legal-brief">Legal Brief</option>
+                      <option value="court-filing">Court Filing</option>
+                      <option value="correspondence">Correspondence</option>
+                      <option value="research">Research</option>
+                      <option value="general">General</option>
+                    </select>
                     <textarea
                       value={editForm.content}
                       onChange={(e) => setEditForm({...editForm, content: e.target.value})}
@@ -238,7 +255,7 @@ function Dashboard({ user, onLogout }) {
                     </div>
                     <div className="document-actions">
                       <button onClick={() => handleEdit(doc)} className="edit-btn">Edit</button>
-                      <button onClick={() => handleDelete(doc.id)} className="delete-btn">Delete</button>
+                      <button onClick={() => handleDelete(doc._id)} className="delete-btn">Delete</button>
                     </div>
                   </>
                 )}
